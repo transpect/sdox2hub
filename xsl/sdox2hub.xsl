@@ -54,7 +54,7 @@
       <xsl:choose>
         <xsl:when test="tokenize(.,'\s*:\s*')[1]=('border-top','border-right','border-bottom','border-left')">
           <xsl:variable name="name" select="tokenize(.,'\s*:\s*')[1]"/>
-          <xsl:for-each select="tokenize(tokenize(.,'\s*:\s*')[2])">
+          <xsl:for-each select="tokenize(tokenize(.,'\s*:\s*')[2],' ')">
             <xsl:variable name="context" select="."/>
             <xsl:attribute name="css:{$name}-{('color'[matches($context,'^#')],'width'[matches($context,'^[0-9\.]+(pt|mm|cm|px|em|ex|%)$')],'style')[1]}" select="."/>
           </xsl:for-each>
@@ -450,7 +450,7 @@
   
   <xsl:template match="@border-top | @border-right | @border-bottom | @border-left" mode="sdox2hub">
     <xsl:variable name="name" select="local-name()"/>
-    <xsl:for-each select="tokenize(.)">
+    <xsl:for-each select="tokenize(.,' ')">
       <xsl:variable name="context" select="."/>
       <xsl:attribute name="css:{$name}-{('color'[matches($context,'^#')],'width'[matches($context,'^[0-9\.]+(pt|mm|cm|px|em|ex|%)$')],'style')[1]}" select="."/>
     </xsl:for-each>
