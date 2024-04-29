@@ -17,7 +17,7 @@
   <p:option name="zip-dir" required="false" select="''"/>
   
   <p:input port="sdox2hub-xsl">
-    <p:document href="http://this.transpect.io/sdox2hub/xsl/sdox2hub.xsl"/>
+    <p:document href="http://transpect.io/sdox2hub/xsl/sdox2hub.xsl"/>
   </p:input>
   
   <p:output port="result" primary="true">
