@@ -45,6 +45,11 @@
     <css:rule>
       <xsl:apply-templates select="@*" mode="#current"/>
       <xsl:attribute name="layout-type" select="('para'[$layout-type='paragraph'],$layout-type)[1]"/>
+      <xsl:if test="$oi-file-content//numbering/numberedStyles//numberingItem[@src=current()/@name]">
+        <xsl:attribute name="css:list-style-type" select="$oi-file-content//numbering/numberedStyles//numberingItem[@src=current()/@name]/numeratedListFormat"/>
+        <xsl:attribute name="numbering-level" select="count($oi-file-content//numbering/numberedStyles//level[numberingItem[@src=current()/@name]]/preceding-sibling::level)+1"/>
+        <xsl:attribute name="numbering-multilevel-type" select="('single'[count($oi-file-content//numbering/numberedStyles/group[descendant::numberingItem[@src=current()/@name]]/level)=1],'multi')[1]"/>
+      </xsl:if>
       <xsl:apply-templates mode="#current"/>
     </css:rule>
   </xsl:template>
@@ -108,6 +113,20 @@
         </caption>
       </xsl:if>
     </figure>
+  </xsl:template>
+  
+  <xsl:template match="image[latest/caption[not(node())]]" mode="sdox2hub">
+    <informalfigure>
+      <xsl:apply-templates select="@* except (@numbering-value) | preceding-sibling::*[1][self::pagebreak]" mode="#current">
+        <xsl:with-param name="display" select="true()"/>
+      </xsl:apply-templates>
+      <xsl:apply-templates select="latest/source" mode="#current"/>
+      <xsl:if test="latest/node()[not(self::caption or self::source)]">
+        <caption>
+          <xsl:apply-templates select="latest/node()[not(self::caption or self::source)]" mode="#current"/>
+        </caption>
+      </xsl:if>
+    </informalfigure>
   </xsl:template>
   
   <xsl:template match="table" mode="sdox2hub">
@@ -464,6 +483,16 @@
   <xsl:template match="image/@numbering-value" mode="sdox2hub">
     <phrase role="hub:caption-number">
       <xsl:value-of select="('Bild '[$lang='de'],'Figure ')[1]"/>
+      <phrase role="hub:identifier">
+        <xsl:value-of select="."/>
+      </phrase>
+    </phrase>
+    <tab role="docx2hub:generated"/>
+  </xsl:template>
+  
+  <xsl:template match="table/@numbering-value" mode="sdox2hub">
+    <phrase role="hub:caption-number">
+      <xsl:value-of select="('Tabelle '[$lang='de'],'Table ')[1]"/>
       <phrase role="hub:identifier">
         <xsl:value-of select="."/>
       </phrase>
