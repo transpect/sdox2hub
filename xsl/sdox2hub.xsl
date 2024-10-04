@@ -94,11 +94,116 @@
     </para>
   </xsl:template>
   
+  <xsl:template match="paragraph[@stylename=('trenner_anhang_beginn',
+                                             'trenner_benennungsindex_beginn',
+                                             'trenner_hauptteil_de_beginn',
+                                             'trenner_hauptteil_en_beginn',
+                                             'trenner_schrifttum_beginn',
+                                             'trenner_titel_beginn',
+                                             'trenner_umschlag_beginn',
+                                             'trenner_umschlag_rueck',
+                                             'trenner_kasten_beginn',
+                                             'trenner_kasten_ende',
+                                             'trenner_ansprechpartner_beginn',
+                                             'trenner_ansprechpartner_ende',
+                                             'trenner_doi_beginn',
+                                             'trenner_doi_ende',
+                                             'trenner_elevator_pitch_beginn',
+                                             'trenner_elevator_pitch_ende',
+                                             'trenner_inhaltsverzeichnis',
+                                             'trenner_vorspann',
+                                             'kopfzeile_dokumentennummer_links',
+                                             'kopfzeile_dokumentennummer_rechts')]" mode="sdox2hub">
+    <xsl:message>
+      Unberücksichtigter Absatz:
+      <xsl:copy-of select="."/>
+    </xsl:message>
+  </xsl:template>
+  
+  <xsl:template match="*[@id=//*[@tag-type-key=('fur_ausgabe_ignorieren')]/@*[tokenize(name(),'\-')[last()]='id']]" mode="sdox2hub" priority="+.1">
+    <xsl:message>
+      Für Ausgabe ignoriert:
+      <xsl:copy-of select="."/>
+    </xsl:message>
+  </xsl:template>
+  
   <xsl:template match="bulletListFormat" mode="sdox2hub">
     <phrase role="hub:identifier">
       <xsl:apply-templates mode="#current"/>
     </phrase>
     <tab role="docx2hub:generated"/>
+  </xsl:template>
+  
+  <xsl:template match="bulletItem[@src=('literaturangabe_dokumentnummer',
+                                        'trenner_anhang_beginn',
+                                        'trenner_benennungsindex_beginn',
+                                        'trenner_hauptteil_de_beginn',
+                                        'trenner_hauptteil_en_beginn',
+                                        'trenner_schrifttum_beginn',
+                                        'trenner_titel_beginn',
+                                        'trenner_umschlag_beginn',
+                                        'trenner_umschlag_rueck',
+                                        'trenner_kasten_beginn',
+                                        'trenner_kasten_ende',
+                                        'trenner_ansprechpartner_beginn',
+                                        'trenner_ansprechpartner_ende',
+                                        'trenner_doi_beginn',
+                                        'trenner_doi_ende',
+                                        'trenner_elevator_pitch_beginn',
+                                        'trenner_elevator_pitch_ende',
+                                        'trenner_inhaltsverzeichnis',
+                                        'trenner_vorspann',
+                                        'meta_ausgabesprache',
+                                        'meta_autor',
+                                        'meta_blatt',
+                                        'meta_copyright',
+                                        'meta_datum',
+                                        'datum_englisch',
+                                        'meta_nebentitel',
+                                        'einfhrender_titel_englisch',
+                                        'meta_einspruch',
+                                        'einspruch_en',
+                                        'kopfzeile_copyright_links',
+                                        'meta_entwurf',
+                                        'ergnzender_titel_deutsch',
+                                        'erganzender_titel_englisch',
+                                        'meta_fachbereich',
+                                        'meta_gesellschaft',
+                                        'meta_handbuch',
+                                        'meta_header',
+                                        'kopfzeile_copyright_rechts',
+                                        'kopfzeile_dokumentennummer_links',
+                                        'kopfzeile_dokumentennummer_rechts',
+                                        'nebenautor',
+                                        'meta_rechtshinweis_de',
+                                        'meta_rechtshinweis_en',
+                                        'meta_titel_de',
+                                        'meta_titel_en',
+                                        'meta_vdi_nummer',
+                                        'meta_vervielfaeltigung',
+                                        'meta_vorversion_de',
+                                        'meta_vorversion_en',
+                                        'richtlinientitel_english',
+                                        'richtlinientitel_deutsch',
+                                        'begriff_anmerkung',
+                                        'begriff_beispiel',
+                                        'begriff_definition',
+                                        'begriff_quelle',
+                                        'begriff_synonym',
+                                        'begriff_benennung',
+                                        'anmerkung_05',
+                                        'anmerkung_1',
+                                        'tbp_logozeile',
+                                        'tbp_kopfzeile',
+                                        'tbp_dokumenttyp',
+                                        'tbp_erscheinungsdatum',
+                                        'tbp_quellenangabe_abbildung',
+                                        'tbp_vdi_herausgeber',
+                                        'tbp_vdi_bereich')]/bulletListFormat" mode="sdox2hub">
+    <xsl:message>
+      Unberücksichtigte Nummerierung:
+      <xsl:copy-of select="."/>
+    </xsl:message>
   </xsl:template>
   
   <xsl:template match="image" mode="sdox2hub">
@@ -131,6 +236,9 @@
   
   <xsl:template match="table" mode="sdox2hub">
     <table>
+      <xsl:if test="ancestor-or-self::*/@id=//*[@tag-type-key=('ohne_rahmenlinien','tabelle_ohne_rahmenlinien')]/@*[tokenize(name(),'\-')[last()]='id']">
+        <xsl:attribute name="frame" select="'none'"/>
+      </xsl:if>
       <xsl:apply-templates select="@* except (@numbering-value) | preceding-sibling::*[1][self::pagebreak]" mode="#current">
         <xsl:with-param name="display" select="true()"/>
       </xsl:apply-templates>
