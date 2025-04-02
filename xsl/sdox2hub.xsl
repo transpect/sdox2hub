@@ -134,6 +134,12 @@
     <tab role="docx2hub:generated"/>
   </xsl:template>
   
+  <xsl:template match="bulletItem[@src=('begriff_anmerkung',
+                                        'anmerkung_05',
+                                        'anmerkung_1')]/bulletListFormat//text()" mode="sdox2hub">
+    <xsl:value-of select="replace(replace(.,'^Begriff[\s&#160;]+\-[\s&#160;]+',''),'[\s&#160;]+\+[\s&#160;]+[0-9,]+:',':')"/>
+  </xsl:template>
+  
   <xsl:template match="bulletItem[@src=('literaturangabe_dokumentnummer',
                                         'trenner_anhang_beginn',
                                         'trenner_benennungsindex_beginn',
@@ -185,14 +191,14 @@
                                         'meta_vorversion_en',
                                         'richtlinientitel_english',
                                         'richtlinientitel_deutsch',
-                                        'begriff_anmerkung',
                                         'begriff_beispiel',
                                         'begriff_definition',
                                         'begriff_quelle',
                                         'begriff_synonym',
                                         'begriff_benennung',
+                                        (:'begriff_anmerkung',
                                         'anmerkung_05',
-                                        'anmerkung_1',
+                                        'anmerkung_1',:)
                                         'tbp_logozeile',
                                         'tbp_kopfzeile',
                                         'tbp_dokumenttyp',
